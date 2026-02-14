@@ -279,16 +279,46 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // ---------- Parallax on Hero ----------
-    window.addEventListener('scroll', () => {
-        const heroImg = document.querySelector('.hero-img');
-        if (heroImg) {
-            const scrolled = window.scrollY;
-            heroImg.style.transform = `scale(${1 + scrolled * 0.0002}) translateY(${scrolled * 0.3}px)`;
-        }
-    });
-
     // ---------- Image transition for lightbox ----------
     lightboxImg.style.transition = 'opacity 0.3s ease';
+
+    // ---------- Touch Swipe for Lightbox ----------
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    lightbox.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    lightbox.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        const swipeDistance = touchStartX - touchEndX;
+        if (Math.abs(swipeDistance) > 50) {
+            if (swipeDistance > 0) {
+                navigateLightbox(1);  // Swipe left = next
+            } else {
+                navigateLightbox(-1); // Swipe right = prev
+            }
+        }
+    }, { passive: true });
+
+    // ---------- Prevent iOS Rubber Banding in Lightbox ----------
+    lightbox.addEventListener('touchmove', (e) => {
+        if (lightbox.classList.contains('active')) {
+            e.preventDefault();
+        }
+    }, { passive: false });
+
+    // ---------- Disable Parallax on Mobile (performance) ----------
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
+    if (!isMobile) {
+        window.addEventListener('scroll', () => {
+            const heroImg = document.querySelector('.hero-img');
+            if (heroImg) {
+                const scrolled = window.scrollY;
+                heroImg.style.transform = `scale(${1 + scrolled * 0.0002}) translateY(${scrolled * 0.3}px)`;
+            }
+        });
+    }
 
 });
