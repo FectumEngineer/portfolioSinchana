@@ -1,5 +1,5 @@
 /* ============================================
-   SINCHAN L SHETTY - MODEL PORTFOLIO
+   SINCHANA L SHETTY - MODEL PORTFOLIO
    Interactive JavaScript
    ============================================ */
 
